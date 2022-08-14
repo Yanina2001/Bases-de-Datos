@@ -1,0 +1,60 @@
+1. SELECT * FROM productos;
+   UPDATE productos
+   SET preciounit = (preciounit*0.1) + preciounit;
+
+2. SELECT * FROM proveedores;
+   UPDATE proveedores
+   SET celuprov = '0990101291'
+   WHERE contacto = 'MANUEL ANDRADE'
+
+3. SELECT * FROM productos;
+   DELETE FROM productos
+   WHERE descripcion = 'YOGURT DE SABORES'
+
+4. SELECT * FROM ordenes;
+   SELECT * FROM empleados;
+   SELECT ord.ordenid, emp.empleadoid, emp.nombre, emp.apellido, ord.
+   fechaorden
+   FROM ordenes ord, empleados emp
+   WHERE ord.empleadoid = emp.empleadoid;
+
+5. SELECT * FROM empleados;
+   SELECT * FROM ordenes;
+   SELECT nombre AS "Nombre", apellido AS "Apellido", count(ord.empleadoid) AS
+   "# de ordenes"
+   FROM empleados emp
+   LEFT JOIN ordenes ord
+   ON emp.empleadoid = ord.empleadoid
+   GROUP BY apellido, nombre;
+
+6. SELECT * FROM productos;
+   SELECT * FROM ordenes;
+   SELECT * FROM detalle_ordenes;
+
+   CREATE OR REPLACE FUNCTION num_ordenes_proveedor(idproo int) return s integer
+   as $$
+	DECLARE
+	num INT;
+	BEGIN
+		SELECT count(p.productoid) INTO num FROM productos pjoin 
+		detalle_ordenes dor
+		ON (p.productoid = dor.productoid) JOIN ordenes ord ON (ord.
+		ordenid = dor.ordenid)
+		WHERE proveedorid = idproo
+		GROUP BY proveedorid;
+		RETURN num;
+	END;
+   
+   SELECT num_ordenes_proveedor(10)
+
+7. INSERT INTO empleados
+   VALUES("Dirección", "Teléfono", "Correo");
+
+   INSERT INTO clientes
+   VALUES("EstadoCivil", "Años", "FechaDeNacimiento");
+
+   INSERT INTO categorias
+   VALUES("Juguetes", "Libros", "Herramientas");
+
+   INSERT INTO ordenes
+   VALUES("Promoción", "FechaEntrega", "NúmeroOorden");
